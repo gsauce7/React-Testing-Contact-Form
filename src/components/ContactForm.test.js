@@ -16,13 +16,13 @@ test('User can fill out and submit form', async () => {
 
 //lets us enter text in the fields
     fireEvent.change(firstName, {
-        target: { name: 'Ram'}});
+        target: { name: 'Gabriel'}});
 
     fireEvent.change(lastName, {
-        target: { name: 'Nasir' }});
+        target: { name: 'Henton' }});
 
     fireEvent.change(emailAdrs, {
-        target: { name: 'rnasir@gmail.com' }});
+        target: { name: 'gabrielhenton@gmail.com' }});
 
     fireEvent.change(msg, {
         target: { name: 'This is a test' }});
@@ -31,9 +31,9 @@ test('User can fill out and submit form', async () => {
     const button = screen.getByRole('button');
     fireEvent.click(button);
 
-    await screen.queryByText(/ram/i);
-    await screen.queryByText(/nasir/i);
-    await screen.queryByText(/rnasir@gmail.com/i);
+    await screen.queryByText(/gabriel/i);
+    await screen.queryByText(/henton/i);
+    await screen.queryByText(/gabrielhenton@gmail.com/i);
     await screen.queryByText(/this is a test/i);
 
 });
