@@ -1,39 +1,49 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ContactForm from './ContactForm';
 
 test('renders ContactForm', () => {
   render(<ContactForm />);
 });
-test('User can fill out and submit form', () => {
+test('User can fill out and submit form', async () => {
   render(<ContactForm />);
-  // create variables that allow us to test our input fields
-  const firstName = screen.getByText(/first name/i);
-  const lastName = screen.getByText(/last name/i);
-  const emailAddrs = screen.getByText(/email/i);
-  const msg = screen.getByText(/message/i);
+  // 1. create variables that allow us to test our input fields and submit button
+  const firstName = screen.getByLabelText(/First Name/i);
+  const lastName = screen.getByLabelText(/Last Name/i);
+  const emailAddrs = screen.getByLabelText(/email/i);
+  const msg = screen.getByLabelText(/message/i);
+  const button = screen.getByRole('button');
 
-  // enter text in the fields
+  // 2. enter text in the fields and immediately test assertions (expect) once await receives response
 
-  userEvent.type(firstName, 'Gabriel');
-  userEvent.type(lastName, 'Henton');
-  userEvent.type(emailAddrs, 'g@g.com');
-  userEvent.type(msg, 'Success!');
-
-  // test expectations
+  await userEvent.type(firstName, 'Gabriel');
   expect(firstName).toHaveValue('Gabriel');
+
+  await userEvent.type(lastName, 'Henton');
   expect(lastName).toHaveValue('Henton');
-  expect(msg).toHaveValue('Success!');
+
+  await userEvent.type(emailAddrs, 'g@g.com');
   expect(emailAddrs).toHaveValue('g@g.com');
 
-  //submit button test
-  const button = screen.getByRole('button');
+  await userEvent.type(msg, 'Enjoy this day');
+  expect(msg).toHaveValue('Enjoy this day');
+
+  // 3. push the submit button - wait until the field is completely filled out this needs to be at the end of your code
+  //  act(() => {
+  //     await userEvent.click(button);
+  //   });
+
   userEvent.click(button);
 
-  const newContact = screen.findByText(/Gabriel Henton/i);
+  const result = await screen.findByTestId('result');
+  expect(result).toBeInTheDocument();
 
-  newContact.then((item) => {
-    expect(item).toBeTruthy();
-  });
+  screen.debug();
 });
+// {
+//     "firstName": "Gabriel",
+//     "lastName": "Henton",
+//     "email": "g@g.com",
+//     "message": "Enjoy this day"
+//   }
